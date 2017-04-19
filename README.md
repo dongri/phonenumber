@@ -1,5 +1,7 @@
 # phonenumber
 
+golang port of node-phone
+
 phonenumber is used to normalize the mobile phone number into a E.164 format.
 
 The common problem is user normally input the phone number in this way:
