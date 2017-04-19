@@ -7,8 +7,8 @@ phonenumber is used to normalize the mobile phone number into a E.164 format.
 The common problem is user normally input the phone number in this way:
 
 ```
-(090) 3368-4467 or
-090-3368-4467 or
+(090) 6135-4467 or
+090-6135-4467 or
 81(090) 6135-4467 or
 +81(090) 6135-4467 or ...
 ```
