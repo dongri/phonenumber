@@ -34,3 +34,6 @@ import "github.com/dongri/phonenumber"
 number := phonenumber.Parse("090-6135-4467", "JP")
 fmt.Println(number)
 ```
+
+# License
+MIT
