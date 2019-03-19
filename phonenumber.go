@@ -29,7 +29,7 @@ func Parse(number string, country string) string {
 		number = r.ReplaceAllString(number, "")
 	}
 	if plusSign {
-		iso3166 = getISO3166ByNumber(number)
+		iso3166 = GetISO3166ByNumber(number)
 	} else {
 		if indexOfInt(len(number), iso3166.PhoneNumberLengths) != -1 {
 			number = iso3166.CountryCode + number
