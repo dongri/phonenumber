@@ -76,7 +76,7 @@ func getISO3166ByCountry(country string) ISO3166 {
 	return iso3166
 }
 
-func getISO3166ByNumber(number string) ISO3166 {
+func GetISO3166ByNumber(number string) ISO3166 {
 	iso3166 := ISO3166{}
 	for _, i := range GetISO3166() {
 		r := regexp.MustCompile(`^` + i.CountryCode)
