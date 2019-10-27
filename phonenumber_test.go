@@ -95,7 +95,7 @@ func TestGetCountryForITMobile(t *testing.T) {
 	tv := "39339638066" // mobile number
 	expected := getISO3166ByCountry("it") // country
 
-	country := GetISO3166ByNumber(tv, true)
+	country := GetISO3166ByNumber(tv, false)
 	if country.CountryName == "" {
 		t.Errorf("Country is empty for %s mobile number `%s`", expected.CountryName, tv)
 	}
@@ -108,7 +108,20 @@ func TestGetCountryForAUTMobile(t *testing.T) {
 	tv := "43663242739" // mobile number
 	expected := getISO3166ByCountry("at") // country
 
-	country := GetISO3166ByNumber(tv, true)
+	country := GetISO3166ByNumber(tv, false)
+	if country.CountryName == "" {
+		t.Errorf("Country is empty for %s mobile number `%s`", expected.CountryName, tv)
+	}
+	if country.CountryName != expected.CountryName {
+		t.Errorf("For `%s` mobile number `%s` got country `%s`\nwant `%s`", expected.CountryName, tv, country.CountryName, expected.CountryName)
+	}
+}
+
+func TestGetCountryForTUNMobile(t *testing.T) {
+	tv := "21655886170" // mobile number
+	expected := getISO3166ByCountry("tn") // country
+
+	country := GetISO3166ByNumber(tv, false)
 	if country.CountryName == "" {
 		t.Errorf("Country is empty for %s mobile number `%s`", expected.CountryName, tv)
 	}
