@@ -5,8 +5,17 @@ import (
 	"strings"
 )
 
-// Parse ...
+// Parse mobile number by country
 func Parse(number string, country string) string {
+	return parseInternal(number, country,  false)
+}
+
+// Parse mobile and land line number by country
+func ParseWithLandLine(number string, country string) string {
+	return parseInternal(number, country, true)
+}
+
+func parseInternal(number string, country string, landLineInclude bool) string {
 	number = strings.Replace(number, " ", "", -1)
 	country = strings.Replace(country, " ", "", -1)
 	plusSign := false
@@ -29,13 +38,13 @@ func Parse(number string, country string) string {
 		number = r.ReplaceAllString(number, "")
 	}
 	if plusSign {
-		iso3166 = GetISO3166ByNumber(number)
+		iso3166 = GetISO3166ByNumber(number, landLineInclude)
 	} else {
 		if indexOfInt(len(number), iso3166.PhoneNumberLengths) != -1 {
 			number = iso3166.CountryCode + number
 		}
 	}
-	if validatePhoneISO3166(number, iso3166) {
+	if validatePhoneISO3166(number, iso3166, landLineInclude) {
 		return number
 	}
 	return ""
@@ -76,18 +85,25 @@ func getISO3166ByCountry(country string) ISO3166 {
 	return iso3166
 }
 
-func GetISO3166ByNumber(number string) ISO3166 {
+func GetISO3166ByNumber(number string, withLandLine bool) ISO3166 {
 	iso3166 := ISO3166{}
 	for _, i := range GetISO3166() {
 		r := regexp.MustCompile(`^` + i.CountryCode)
 		for _, l := range i.PhoneNumberLengths {
 			if r.MatchString(number) && len(number) == len(i.CountryCode)+l {
+				// Check match with mobile codes
 				for _, w := range i.MobileBeginWith {
 					r := regexp.MustCompile(`^` + i.CountryCode + w)
 					if r.MatchString(number) {
+						// Match by mobile codes
 						iso3166 = i
 						break
 					}
+				}
+
+				// Match by country code only for land line numbers only
+				if withLandLine == true {
+					iso3166 = i
 				}
 			}
 		}
@@ -95,12 +111,23 @@ func GetISO3166ByNumber(number string) ISO3166 {
 	return iso3166
 }
 
-func validatePhoneISO3166(number string, iso3166 ISO3166) bool {
-	r := regexp.MustCompile(`^` + iso3166.CountryCode)
-	number = r.ReplaceAllString(number, "")
+func validatePhoneISO3166(number string, iso3166 ISO3166, withLandLine bool) bool {
 	if len(iso3166.PhoneNumberLengths) == 0 {
 		return false
 	}
+
+	if withLandLine {
+		r := regexp.MustCompile(`^` + iso3166.CountryCode)
+		for _, l := range iso3166.PhoneNumberLengths {
+			if r.MatchString(number) && len(number) == len(iso3166.CountryCode)+l {
+				return true
+			}
+		}
+		return false
+	}
+
+	r := regexp.MustCompile(`^` + iso3166.CountryCode)
+	number = r.ReplaceAllString(number, "")
 	for _, l := range iso3166.PhoneNumberLengths {
 		if l == len(number) {
 			for _, w := range iso3166.MobileBeginWith {
