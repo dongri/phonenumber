@@ -29,10 +29,12 @@ var mobFormatTestsNegative = []struct {
 	input    string
 	country  string
 }{
+	// Land line numbers
 	{"+371 (67) 881-727", "lv"},
 	{"3726347343", "ee"},
 	{"7499 709 88 33", "ru"},
 	{"+48 22 (483) 53-34", "pl"},
+	{"4970523743", "de"},
 }
 func TestFormatForLandLineIsEmpty(t *testing.T) {
 	for _, tt := range mobFormatTestsNegative {
