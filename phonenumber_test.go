@@ -4,128 +4,130 @@ import (
 	"testing"
 )
 
-func TestJP(t *testing.T) {
-	number := Parse("090 6135 3368", "jp")
-	expected := "819061353368"
-	if number != expected {
-		t.Errorf("JP: got %v\nwant %v", number, expected)
+// Tests format mobile
+var mobFormatTests = []struct {
+	input    string
+	country  string
+	expected string
+}{
+	{"090 6135 3368", "jp", "819061353368"},
+	{"+8615948692360", "cn", "8615948692360"},
+	{"(817) 569-8900", "usa", "18175698900"},
+	{"+371 25 641 580", "lv", "37125641580"},
+}
+func TestFormatMobile(t *testing.T) {
+	for _, tt := range mobFormatTests {
+		number := Parse(tt.input, tt.country)
+		if number != tt.expected {
+			t.Errorf("Parse(number=`%s`, country=`%s`): expected `%s`, actual `%s`", tt.input, tt.country, tt.expected, number)
+		}
 	}
 }
 
-func TestCNFormat(t *testing.T) {
-	number := Parse("+8615948692360", "cn")
-	expected := "8615948692360"
-	if number != expected {
-		t.Errorf("CN: got %v\nwant %v", number, expected)
+// Negative tests for mobile format (landline numbers is not valid)
+var mobFormatTestsNegative = []struct {
+	input    string
+	country  string
+}{
+	{"+371 (67) 881-727", "lv"},
+	{"3726347343", "ee"},
+	{"7499 709 88 33", "ru"},
+	{"+48 22 (483) 53-34", "pl"},
+}
+func TestFormatForLandLineIsEmpty(t *testing.T) {
+	for _, tt := range mobFormatTestsNegative {
+		number := Parse(tt.input, tt.country)
+		if number != "" {
+			t.Errorf("Parse(number=`%s`, country=`%s`) for land line number miust be empty, actual `%s`", tt.input, tt.country, number)
+		}
 	}
 }
 
-func TestUSAFormat(t *testing.T) {
-	number := Parse("(817) 569-8900", "usa")
-	expected := "18175698900"
-	if number != expected {
-		t.Errorf("CN: got %v\nwant %v", number, expected)
+// Land line numbers format
+var mobWithLLFormatTests = []struct {
+	input    string
+	country  string
+	expected string
+}{
+	// Land line numbers
+	{"+371 (67) 881-727", "lv", "37167881727"},
+	{"3726347343", "ee", "3726347343"},
+	{"7499 709 88 33", "ru", "74997098833"},
+	//{"8499 709 88 33", "ru", "74997098833"}, fixme
+	{"22 (483) 53-34", "pl", "48224835334"},
+	// Mobile numbers
+	{"090 6135 3368", "jp", "819061353368"},
+	{"+8615948692360", "cn", "8615948692360"},
+	{"(817) 569-8900", "usa", "18175698900"},
+	{"+371 25 641 580", "lv", "37125641580"},
+}
+func TestFormatWithLandLine(t *testing.T) {
+	for _, tt := range mobWithLLFormatTests {
+		number := ParseWithLandLine(tt.input, tt.country)
+		if number != tt.expected {
+			t.Errorf("Parse(number=`%s`, country=`%s`): expected `%s`, actual `%s`", tt.input, tt.country, tt.expected, number)
+		}
 	}
 }
 
-func TestLVMobileFormat(t *testing.T) {
-	number := Parse("+371 25 641 580", "lv")
-	expected := "37125641580"
-	if number != expected {
-		t.Errorf("LV mobile: got %v\nwant %v", number, expected)
+// Get country by mobile number only
+var mobWithLLCountryTests = []struct {
+	input    string
+	expected  string
+}{
+	// Land line numbers
+	{"3726347343", "ee"},
+	{"74997098833", "ru"},
+	{"37167881727", "lv"},
+	// Mobile numbers
+	{"39339638066", "it"},
+	{"37125641580", "lv"},
+	{"43663242739", "at"},
+	{"21655886170", "tn"},
+}
+func TestGetCountryForMobileNumberWithLandLine(t *testing.T) {
+	for _, tt := range mobWithLLCountryTests {
+		country := GetISO3166ByNumber(tt.input, true)
+		if tt.expected == "" {
+			if country.CountryName != "" {
+				t.Errorf("GetISO3166ByNumber(number=`%s`, withLandline=false): must be empty, actual `%s`", tt.input, country.CountryName)
+			}
+		} else {
+			expected := getISO3166ByCountry(tt.expected)
+			if country.CountryName != expected.CountryName {
+				t.Errorf("GetISO3166ByNumber(number=`%s`, withLandline=false): expected `%s`, actual `%s`", tt.input, expected.CountryName, country.CountryName)
+			}
+		}
 	}
 }
 
-func TestLVLandLineIsNotValid(t *testing.T) {
-	number := Parse("+371 (67) 881-727", "lv")
-	if number != "" {
-		t.Errorf("Backward compatibility fail: Parse() for land line number must be empty")
-	}
+// Get country by mobile number only
+var mobCountryTests = []struct {
+	input    string
+	expected  string
+}{
+	// Land line numbers
+	{"3726347343", ""},
+	{"74997098833", ""},
+	{"37167881727", ""},
+	// Mobile numbers
+	{"39339638066", "it"},
+	{"37125641580", "lv"},
+	{"43663242739", "at"},
+	{"21655886170", "tn"},
 }
-
-func TestLVLandLineFormat(t *testing.T) {
-	number := ParseWithLandLine("+371 (67) 881-727", "lv")
-	expected := "37167881727"
-	if number != expected {
-		t.Errorf("LV land line parse: got %v\nwant %v", number, expected)
-	}
-}
-
-func TestLVLandLineFormatWithMobileNumberIsEmpty(t *testing.T) {
-	number := ParseWithLandLine("+371(25)641580", "lv")
-	expected := "37125641580"
-	if number != expected {
-		t.Errorf("LV land line parse: got %v\nwant %v", number, expected)
-	}
-}
-
-func TestGetCountryForLVMobile(t *testing.T) {
-	tv := "37125641580" // mobile number
-	country := GetISO3166ByNumber(tv, true)
-	expected := getISO3166ByCountry("lv")
-	if country.CountryName == "" {
-		t.Errorf("Country is empty for Latvian mobile number %s", tv)
-	}
-	if country.CountryName != expected.CountryName {
-		t.Errorf("For Latvian mobile number %s got country %s\nwant %s", tv, country.CountryName, expected.CountryName)
-	}
-}
-
-func TestGetCountryIsEmptyForLandLineNumberInMobileOnlySearch(t *testing.T) {
-	tv := "37167881727" // land line number
-	country := GetISO3166ByNumber(tv, false)
-	if country.CountryName != "" {
-		t.Errorf("Got country %s for landline number %s for lookup through mobile only numbers, expected: not found", country.CountryName, tv)
-	}
-}
-
-func TestGetCountryForLVLandLine(t *testing.T) {
-	tv := "37167881727" // land line number
-	country := GetISO3166ByNumber(tv, true)
-	expected := getISO3166ByCountry("lv")
-	if country.CountryName == "" {
-		t.Errorf("Country is empty for Latvian land line number %s", tv)
-	}
-	if country.CountryName != expected.CountryName {
-		t.Errorf("For Latvian landline number %s got country %s\nwant %s", tv, country.CountryName, expected.CountryName)
-	}
-}
-
-func TestGetCountryForITMobile(t *testing.T) {
-	tv := "39339638066" // mobile number
-	expected := getISO3166ByCountry("it") // country
-
-	country := GetISO3166ByNumber(tv, false)
-	if country.CountryName == "" {
-		t.Errorf("Country is empty for %s mobile number `%s`", expected.CountryName, tv)
-	}
-	if country.CountryName != expected.CountryName {
-		t.Errorf("For `%s` mobile number `%s` got country `%s`\nwant `%s`", expected.CountryName, tv, country.CountryName, expected.CountryName)
-	}
-}
-
-func TestGetCountryForAUTMobile(t *testing.T) {
-	tv := "43663242739" // mobile number
-	expected := getISO3166ByCountry("at") // country
-
-	country := GetISO3166ByNumber(tv, false)
-	if country.CountryName == "" {
-		t.Errorf("Country is empty for %s mobile number `%s`", expected.CountryName, tv)
-	}
-	if country.CountryName != expected.CountryName {
-		t.Errorf("For `%s` mobile number `%s` got country `%s`\nwant `%s`", expected.CountryName, tv, country.CountryName, expected.CountryName)
-	}
-}
-
-func TestGetCountryForTUNMobile(t *testing.T) {
-	tv := "21655886170" // mobile number
-	expected := getISO3166ByCountry("tn") // country
-
-	country := GetISO3166ByNumber(tv, false)
-	if country.CountryName == "" {
-		t.Errorf("Country is empty for %s mobile number `%s`", expected.CountryName, tv)
-	}
-	if country.CountryName != expected.CountryName {
-		t.Errorf("For `%s` mobile number `%s` got country `%s`\nwant `%s`", expected.CountryName, tv, country.CountryName, expected.CountryName)
+func TestGetCountryForMobileNumber(t *testing.T) {
+	for _, tt := range mobCountryTests {
+		country := GetISO3166ByNumber(tt.input, false)
+		if tt.expected == "" {
+			if country.CountryName != "" {
+				t.Errorf("GetISO3166ByNumber(number=`%s`, withLandline=false): must be empty, actual `%s`", tt.input, country.CountryName)
+			}
+		} else {
+			expected := getISO3166ByCountry(tt.expected)
+			if country.CountryName != expected.CountryName {
+				t.Errorf("GetISO3166ByNumber(number=`%s`, withLandline=false): expected `%s`, actual `%s`", tt.input, expected.CountryName, country.CountryName)
+			}
+		}
 	}
 }
