@@ -15,6 +15,7 @@ var mobFormatTests = []struct {
 	{"(817) 569-8900", "usa", "18175698900"},
 	{"+371 25 641 580", "lv", "37125641580"},
 }
+
 func TestFormatMobile(t *testing.T) {
 	for _, tt := range mobFormatTests {
 		number := Parse(tt.input, tt.country)
@@ -26,8 +27,8 @@ func TestFormatMobile(t *testing.T) {
 
 // Negative tests for mobile format (landline numbers is not valid)
 var mobFormatTestsNegative = []struct {
-	input    string
-	country  string
+	input   string
+	country string
 }{
 	// Land line numbers
 	{"+371 (67) 881-727", "lv"},
@@ -36,6 +37,7 @@ var mobFormatTestsNegative = []struct {
 	{"+48 22 (483) 53-34", "pl"},
 	{"4970523743", "de"},
 }
+
 func TestFormatForLandLineIsEmpty(t *testing.T) {
 	for _, tt := range mobFormatTestsNegative {
 		number := Parse(tt.input, tt.country)
@@ -66,6 +68,7 @@ var mobWithLLFormatTests = []struct {
 	{"+371 25 641 580", "lv", "37125641580"},
 	{"00371 25 641 580", "lv", "37125641580"},
 }
+
 func TestFormatWithLandLine(t *testing.T) {
 	for _, tt := range mobWithLLFormatTests {
 		number := ParseWithLandLine(tt.input, tt.country)
@@ -78,7 +81,7 @@ func TestFormatWithLandLine(t *testing.T) {
 // Get country by mobile number only
 var mobWithLLCountryTests = []struct {
 	input    string
-	expected  string
+	expected string
 }{
 	// Land line numbers
 	{"3726347343", "ee"},
@@ -90,6 +93,7 @@ var mobWithLLCountryTests = []struct {
 	{"43663242739", "at"},
 	{"21655886170", "tn"},
 }
+
 func TestGetCountryForMobileNumberWithLandLine(t *testing.T) {
 	for _, tt := range mobWithLLCountryTests {
 		country := GetISO3166ByNumber(tt.input, true)
@@ -109,7 +113,7 @@ func TestGetCountryForMobileNumberWithLandLine(t *testing.T) {
 // Get country by mobile number only
 var mobCountryTests = []struct {
 	input    string
-	expected  string
+	expected string
 }{
 	// Land line numbers
 	{"3726347343", ""},
@@ -117,10 +121,12 @@ var mobCountryTests = []struct {
 	{"37167881727", ""},
 	// Mobile numbers
 	{"39339638066", "it"},
+	{"3933431022608", "it"},
 	{"37125641580", "lv"},
 	{"43663242739", "at"},
 	{"21655886170", "tn"},
 }
+
 func TestGetCountryForMobileNumber(t *testing.T) {
 	for _, tt := range mobCountryTests {
 		country := GetISO3166ByNumber(tt.input, false)
