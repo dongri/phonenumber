@@ -7,7 +7,7 @@ import (
 
 // Parse mobile number by country
 func Parse(number string, country string) string {
-	return parseInternal(number, country,  false)
+	return parseInternal(number, country, false)
 }
 
 // Parse mobile and land line number by country
