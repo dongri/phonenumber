@@ -128,6 +128,7 @@ var mobCountryTests = []struct {
 	{"21655886170", "tn"},
 	{"2349091500528", "ng"},
 	{"5491138697327", "ar"},
+	{"96871983009", "om"},
 }
 
 func TestGetCountryForMobileNumber(t *testing.T) {
