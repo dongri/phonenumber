@@ -790,7 +790,7 @@ func GetISO3166() []ISO3166 {
 	i.Alpha3 = "IND"
 	i.CountryCode = "91"
 	i.CountryName = "India"
-	i.MobileBeginWith = []string{"7", "8", "9"}
+	i.MobileBeginWith = []string{"0", "6", "7", "8", "9"}
 	i.PhoneNumberLengths = []int{10}
 	iso3166Datas = append(iso3166Datas, i)
 
