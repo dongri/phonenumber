@@ -111,44 +111,6 @@ func TestGetCountryForMobileNumberWithLandLine(t *testing.T) {
 	}
 }
 
-// Get country by mobile number only
-var mobCountryTests = []struct {
-	input    string
-	expected string
-}{
-	// Land line numbers
-	{"3726347343", ""},
-	{"74997098833", ""},
-	{"37167881727", ""},
-	// Mobile numbers
-	{"39339638066", "it"},
-	{"3933431022608", "it"},
-	{"37125641580", "lv"},
-	{"43663242739", "at"},
-	{"21655886170", "tn"},
-	{"2349091500528", "ng"},
-	{"5491138697327", "ar"},
-	{"96871983009", "om"},
-	{"23059402290", "mu"},
-	{"387644523518", "ba"},
-}
-
-func TestGetCountryForMobileNumber(t *testing.T) {
-	for _, tt := range mobCountryTests {
-		country := GetISO3166ByNumber(tt.input, false)
-		if tt.expected == "" {
-			if country.CountryName != "" {
-				t.Errorf("GetISO3166ByNumber(number=`%s`, withLandline=false): must be empty, actual `%s`", tt.input, country.CountryName)
-			}
-		} else {
-			expected := getISO3166ByCountry(tt.expected)
-			if country.CountryName != expected.CountryName {
-				t.Errorf("GetISO3166ByNumber(number=`%s`, withLandline=false): expected `%s`, actual `%s`", tt.input, expected.CountryName, country.CountryName)
-			}
-		}
-	}
-}
-
 // Test the real and validated mobile number for India country
 // We added "910" prefix that does not match a specification, but the numbers are really exists
 var indiaMobileTests = []struct {
@@ -264,3 +226,43 @@ func TestIndiaMobileNumber(t *testing.T) {
 		}
 	}
 }
+
+
+// Get country by mobile number only
+var mobCountryTests = []struct {
+	input    string
+	expected string
+}{
+	// Land line numbers
+	{"3726347343", ""},
+	{"74997098833", ""},
+	{"37167881727", ""},
+	// Mobile numbers
+	{"39339638066", "it"},
+	{"3933431022608", "it"},
+	{"37125641580", "lv"},
+	{"43663242739", "at"},
+	{"21655886170", "tn"},
+	{"2349091500528", "ng"},
+	{"5491138697327", "ar"},
+	{"96871983009", "om"},
+	{"23059402290", "mu"},
+	{"387644523518", "ba"},
+}
+
+func TestGetCountryForMobileNumber(t *testing.T) {
+	for _, tt := range mobCountryTests {
+		country := GetISO3166ByNumber(tt.input, false)
+		if tt.expected == "" {
+			if country.CountryName != "" {
+				t.Errorf("GetISO3166ByNumber(number=`%s`, withLandline=false): must be empty, actual `%s`", tt.input, country.CountryName)
+			}
+		} else {
+			expected := getISO3166ByCountry(tt.expected)
+			if country.CountryName != expected.CountryName {
+				t.Errorf("GetISO3166ByNumber(number=`%s`, withLandline=false): expected `%s`, actual `%s`", tt.input, expected.CountryName, country.CountryName)
+			}
+		}
+	}
+}
+
