@@ -878,7 +878,7 @@ func GetISO3166() []ISO3166 {
 	i.Alpha3 = "KEN"
 	i.CountryCode = "254"
 	i.CountryName = "Kenya"
-	i.MobileBeginWith = []string{"7"}
+	i.MobileBeginWith = []string{"7","1"} // https://ca.go.ke/new-series-of-mobile-number-introduced-in-kenya/
 	i.PhoneNumberLengths = []int{9}
 	iso3166Datas = append(iso3166Datas, i)
 
