@@ -358,7 +358,7 @@ func GetISO3166() []ISO3166 {
 	i.Alpha3 = "CIV"
 	i.CountryCode = "225"
 	i.CountryName = "Côte D'Ivoire"
-	i.MobileBeginWith = []string{"0", "4", "5", "6"}
+	i.MobileBeginWith = []string{"0", "4", "5", "6", "7"}
 	i.PhoneNumberLengths = []int{8}
 	iso3166Datas = append(iso3166Datas, i)
 
