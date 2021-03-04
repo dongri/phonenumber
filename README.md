@@ -39,7 +39,7 @@ import "github.com/dongri/phonenumber"
 
 number := phonenumber.Parse("090-6135-4467", "JP")
 fmt.Println(number)
-// Output: 9061354467
+// Output: 819061354467
 ```
 
 In this case you can format numbers included land line numbers:
