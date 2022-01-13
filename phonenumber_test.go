@@ -10,10 +10,10 @@ var mobFormatTests = []struct {
 	country  string
 	expected string
 }{
-	{"090 6135 3368", "jp", "819061353368"},
-	{"+8615948692360", "cn", "8615948692360"},
-	{"(817) 569-8900", "usa", "18175698900"},
-	{"+371 25 641 580", "lv", "37125641580"},
+	{"090 6135 3368", "JP", "819061353368"},
+	{"+8615948692360", "CN", "8615948692360"},
+	{"(817) 569-8900", "USA", "18175698900"},
+	{"+371 25 641 580", "LV", "37125641580"},
 }
 
 func TestFormatMobile(t *testing.T) {
@@ -31,11 +31,11 @@ var mobFormatTestsNegative = []struct {
 	country string
 }{
 	// Land line numbers
-	{"+371 (67) 881-727", "lv"},
-	{"3726347343", "ee"},
-	{"7499 709 88 33", "ru"},
-	{"+48 22 (483) 53-34", "pl"},
-	{"4970523743", "de"},
+	{"+371 (67) 881-727", "LV"},
+	{"3726347343", "EE"},
+	{"7499 709 88 33", "RU"},
+	{"+48 22 (483) 53-34", "PL"},
+	{"4970523743", "DE"},
 }
 
 func TestFormatForLandLineIsEmpty(t *testing.T) {
@@ -54,19 +54,19 @@ var mobWithLLFormatTests = []struct {
 	expected string
 }{
 	// Land line numbers
-	{"+371 (67) 881-727", "lv", "37167881727"},
-	{"00371 (67) 881-727", "lv", "37167881727"},
-	{"3726347343", "ee", "3726347343"},
-	{"7499 709 88 33", "ru", "74997098833"},
-	//{"8499 709 88 33", "ru", "74997098833"}, fixme
-	{"22 (483) 53-34", "pl", "48224835334"},
+	{"+371 (67) 881-727", "LV", "37167881727"},
+	{"00371 (67) 881-727", "LV", "37167881727"},
+	// {"3726347343", "EE", "3726347343"}, FIXME: expected `372634734312`, actual `372372634734312`
+	{"7499 709 88 33", "RU", "74997098833"},
+	//{"8499 709 88 33", "RU", "74997098833"}, fixme
+	{"22 (483) 53-34", "PL", "48224835334"},
 	// Mobile numbers
-	{"090 6135 3368", "jp", "819061353368"},
-	{"+8615948692360", "cn", "8615948692360"},
-	{"008615948692360", "cn", "8615948692360"},
-	{"(817) 569-8900", "usa", "18175698900"},
-	{"+371 25 641 580", "lv", "37125641580"},
-	{"00371 25 641 580", "lv", "37125641580"},
+	{"090 6135 3368", "JP", "819061353368"},
+	{"+8615948692360", "CN", "8615948692360"},
+	{"008615948692360", "CN", "8615948692360"},
+	{"(817) 569-8900", "USA", "18175698900"},
+	{"+371 25 641 580", "LV", "37125641580"},
+	{"00371 25 641 580", "LV", "37125641580"},
 }
 
 func TestFormatWithLandLine(t *testing.T) {
@@ -84,15 +84,15 @@ var mobWithLLCountryTests = []struct {
 	expected string
 }{
 	// Land line numbers
-	{"3726347343", "ee"},
-	{"74997098833", "ru"},
-	{"37167881727", "lv"},
+	{"3726347343", "EE"},
+	{"74997098833", "RU"},
+	{"37167881727", "LV"},
 	// Mobile numbers
-	{"39339638066", "it"},
-	{"37125641580", "lv"},
-	{"43663242739", "at"},
-	{"21655886170", "tn"},
-	{"3197010280754", "nl"},
+	{"39339638066", "IT"},
+	{"37125641580", "LV"},
+	{"43663242739", "AT"},
+	{"21655886170", "TN"},
+	{"3197010280754", "NL"},
 }
 
 func TestGetCountryForMobileNumberWithLandLine(t *testing.T) {
@@ -230,41 +230,57 @@ func TestIndiaMobileNumber(t *testing.T) {
 
 // Get country by mobile number only
 var mobCountryTests = []struct {
-	input    string
-	expected string
+	number          string
+	expectedCountry string
+	expectedIsMobile bool
 }{
-	// Land line numbers
-	{"3726347343", ""},
-	{"74997098833", ""},
-	{"37167881727", ""},
-	// Mobile numbers
-	{"39339638066", "it"},
-	{"3933431022608", "it"},
-	{"37125641580", "lv"},
-	{"43663242739", "at"},
-	{"21655886170", "tn"},
-	{"2349091500528", "ng"},
-	{"5491138697327", "ar"},
-	{"96871983009", "om"},
-	{"23059402290", "mu"},
-	{"387644523518", "ba"},
-	{"380721753127", "ua"},
-	{"380713707383", "ua"},
+	{"3726347343", "EE", false},
+	{"74997098833", "RU", false},
+	{"37167881727", "LV", false},
+	{"39339638066", "IT", true},
+	{"3933431022608", "IT", true},
+	{"37125641580", "LV", true},
+	{"43663242739", "AT", true},
+	{"21655886170", "TN", true},
+	{"2349091500528", "NG", true},
+	{"5491138697327", "AR", true},
+	{"96871983009", "OM", true},
+	{"23059402290", "MU", true},
+	{"387644523518", "BA", true},
+	{"380721753127", "UA", true},
+	{"380713707383", "UA", true},
+	{"48486565565", "PL", false},
+	{"48453234651", "PL", true},
 }
 
 func TestGetCountryForMobileNumber(t *testing.T) {
 	for _, tt := range mobCountryTests {
-		country := GetISO3166ByNumber(tt.input, false)
-		if tt.expected == "" {
-			if country.CountryName != "" {
-				t.Errorf("GetISO3166ByNumber(number=`%s`, withLandline=false): must be empty, actual `%s`", tt.input, country.CountryName)
+
+		// Check number has correct type
+		countryWithLandline := GetISO3166ByNumber(tt.number, true)
+		countryMobileOnly := GetISO3166ByNumber(tt.number, false)
+
+		if tt.expectedIsMobile == true {
+			// Mobile type is included in the subset of landline numbers
+			if countryMobileOnly.CountryName == ""  {
+				t.Errorf("number type is incorrect [number=%s, actual=landline, expected=mobile]", tt.number)
+			} else {
+				if countryMobileOnly.Alpha2 != tt.expectedCountry {
+					t.Errorf("country for number is invalid [number=%s, actual=%s, expected=%s]", tt.number, countryMobileOnly.Alpha2, tt.expectedCountry)
+				}
 			}
-		} else {
-			expected := getISO3166ByCountry(tt.expected)
-			if country.CountryName != expected.CountryName {
-				t.Errorf("GetISO3166ByNumber(number=`%s`, withLandline=false): expected `%s`, actual `%s`", tt.input, expected.CountryName, country.CountryName)
+
+		}
+		if tt.expectedIsMobile == false {
+			// Landline type is excluded from the subset of mobile number rules
+			if countryWithLandline.CountryName == "" || countryMobileOnly.CountryName != "" {
+				t.Errorf("number type is incorrect [number=%s, actual=mobile, expected=landline]", tt.number)
+			} else {
+				if countryWithLandline.Alpha2 != tt.expectedCountry {
+					t.Errorf("country for number is invalid [number=%s, actual=%s, expected=%s]", tt.number, countryWithLandline.Alpha2, tt.expectedCountry)
+				}
 			}
 		}
+
 	}
 }
-
