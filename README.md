@@ -12,10 +12,10 @@ The common problem is user normally input the phone number in this way:
 09061354467 or
 090-6135-4467 or
 (090) 6135-4467 or
-8109061354467 or
-+8109061354467 or
-81(090) 6135-4467 or
-+81(090) 6135-4467 or ...
+819061354467 or
++819061354467 or
+81(90) 6135-4467 or
++81(90) 6135-4467 or ...
 ```
 
 What we want is always:
@@ -39,7 +39,7 @@ import "github.com/dongri/phonenumber"
 
 number := phonenumber.Parse("090-6135-4467", "JP")
 fmt.Println(number)
-// Output: 9061354467
+// Output: 819061354467
 ```
 
 In this case you can format numbers included land line numbers:

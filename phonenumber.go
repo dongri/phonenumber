@@ -10,7 +10,7 @@ func Parse(number string, country string) string {
 	return parseInternal(number, country, false)
 }
 
-// Parse mobile and land line number by country
+// ParseWithLandLine is Parse mobile and land line number by country
 func ParseWithLandLine(number string, country string) string {
 	return parseInternal(number, country, true)
 }
@@ -85,6 +85,7 @@ func getISO3166ByCountry(country string) ISO3166 {
 	return iso3166
 }
 
+// GetISO3166ByNumber ...
 func GetISO3166ByNumber(number string, withLandLine bool) ISO3166 {
 	iso3166 := ISO3166{}
 	for _, i := range GetISO3166() {

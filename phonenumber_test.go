@@ -14,6 +14,7 @@ var mobFormatTests = []struct {
 	{"+8615948692360", "CN", "8615948692360"},
 	{"(817) 569-8900", "USA", "18175698900"},
 	{"+371 25 641 580", "LV", "37125641580"},
+	{"+62 895349866066", "ID", "62895349866066"},
 }
 
 func TestFormatMobile(t *testing.T) {
@@ -114,7 +115,7 @@ func TestGetCountryForMobileNumberWithLandLine(t *testing.T) {
 // Test the real and validated mobile number for India country
 // We added "910" prefix that does not match a specification, but the numbers are really exists
 var indiaMobileTests = []struct {
-	input    string
+	input string
 }{
 	// Land line numbers
 	{"916361673045"},
@@ -226,7 +227,6 @@ func TestIndiaMobileNumber(t *testing.T) {
 		}
 	}
 }
-
 
 // Get country by mobile number only
 var mobCountryTests = []struct {
