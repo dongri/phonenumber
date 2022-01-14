@@ -358,7 +358,7 @@ func GetISO3166() []ISO3166 {
 	i.Alpha3 = "CIV"
 	i.CountryCode = "225"
 	i.CountryName = "Côte D'Ivoire"
-	i.MobileBeginWith = []string{"0", "4", "5", "6"}
+	i.MobileBeginWith = []string{"0", "4", "5", "6", "7"}
 	i.PhoneNumberLengths = []int{8}
 	iso3166Datas = append(iso3166Datas, i)
 
@@ -463,7 +463,7 @@ func GetISO3166() []ISO3166 {
 	i.CountryCode = "49"
 	i.CountryName = "Germany"
 	i.MobileBeginWith = []string{"15", "16", "17"}
-	i.PhoneNumberLengths = []int{10, 11}
+	i.PhoneNumberLengths = []int{10, 11, 12, 13, 14}
 	iso3166Datas = append(iso3166Datas, i)
 
 	i.Alpha2 = "DJ"
@@ -542,8 +542,8 @@ func GetISO3166() []ISO3166 {
 	i.Alpha3 = "EST"
 	i.CountryCode = "372"
 	i.CountryName = "Estonia"
-	i.MobileBeginWith = []string{"5", "81", "82", "83", "84", "85", "86", "87"}
-	i.PhoneNumberLengths = []int{7, 8}
+	i.MobileBeginWith = []string{"5", "81", "82", "83", "84", "85", "86", "87", "89"}
+	i.PhoneNumberLengths = []int{7, 8, 9, 10, 11, 12}
 	iso3166Datas = append(iso3166Datas, i)
 
 	i.Alpha2 = "ET"
@@ -1358,7 +1358,7 @@ func GetISO3166() []ISO3166 {
 	i.Alpha3 = "POL"
 	i.CountryCode = "48"
 	i.CountryName = "Poland"
-	i.MobileBeginWith = []string{"4", "5", "6", "7", "8"}
+	i.MobileBeginWith = []string{"45", "5", "6", "7", "8"}
 	i.PhoneNumberLengths = []int{9}
 	iso3166Datas = append(iso3166Datas, i)
 
@@ -1742,7 +1742,7 @@ func GetISO3166() []ISO3166 {
 	i.Alpha3 = "UKR"
 	i.CountryCode = "380"
 	i.CountryName = "Ukraine"
-	i.MobileBeginWith = []string{"39", "50", "63", "66", "67", "68", "73", "9"}
+	i.MobileBeginWith = []string{"39", "50", "63", "66", "67", "68", "71", "72", "73", "9"}
 	i.PhoneNumberLengths = []int{9}
 	iso3166Datas = append(iso3166Datas, i)
 
