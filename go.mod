@@ -1,3 +1,3 @@
-module github.com/4rakcheev/phonenumber
+module github.com/dongri/phonenumber
 
 go 1.16
