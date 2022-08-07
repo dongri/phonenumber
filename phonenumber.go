@@ -97,14 +97,13 @@ func GetISO3166ByNumber(number string, withLandLine bool) ISO3166 {
 					r := regexp.MustCompile(`^` + i.CountryCode + w)
 					if r.MatchString(number) {
 						// Match by mobile codes
-						iso3166 = i
-						break
+						return i
 					}
 				}
 
 				// Match by country code only for land line numbers only
 				if withLandLine == true {
-					iso3166 = i
+					return i
 				}
 			}
 		}
