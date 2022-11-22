@@ -230,8 +230,8 @@ func TestIndiaMobileNumber(t *testing.T) {
 
 // Get country by mobile number only
 var mobCountryTests = []struct {
-	number          string
-	expectedCountry string
+	number           string
+	expectedCountry  string
 	expectedIsMobile bool
 }{
 	{"3726347343", "EE", false},
@@ -251,6 +251,10 @@ var mobCountryTests = []struct {
 	{"380713707383", "UA", true},
 	{"48486565565", "PL", false},
 	{"48453234651", "PL", true},
+	{"2250777401160", "CI", true},
+	{"97366622125", "BH", true},
+	{"59160136560", "BO", true},
+	{"59168295570", "BO", true},
 }
 
 func TestGetCountryForMobileNumber(t *testing.T) {
@@ -262,11 +266,11 @@ func TestGetCountryForMobileNumber(t *testing.T) {
 
 		if tt.expectedIsMobile == true {
 			// Mobile type is included in the subset of landline numbers
-			if countryMobileOnly.CountryName == ""  {
-				t.Errorf("number type is incorrect [number=%s, actual=landline, expected=mobile]", tt.number)
+			if countryMobileOnly.CountryName == "" {
+				t.Errorf("number type is incorrect (number=%s, country=%s): [actual=landline, expected=mobile]", tt.number, tt.expectedCountry)
 			} else {
 				if countryMobileOnly.Alpha2 != tt.expectedCountry {
-					t.Errorf("country for number is invalid [number=%s, actual=%s, expected=%s]", tt.number, countryMobileOnly.Alpha2, tt.expectedCountry)
+					t.Errorf("country for number is invalid (number=%s): [actual=%s, expected=%s]", tt.number, countryMobileOnly.Alpha2, tt.expectedCountry)
 				}
 			}
 
@@ -274,10 +278,10 @@ func TestGetCountryForMobileNumber(t *testing.T) {
 		if tt.expectedIsMobile == false {
 			// Landline type is excluded from the subset of mobile number rules
 			if countryWithLandline.CountryName == "" || countryMobileOnly.CountryName != "" {
-				t.Errorf("number type is incorrect [number=%s, actual=mobile, expected=landline]", tt.number)
+				t.Errorf("number type is incorrect (number=%s, country=%s): [actual=mobile, expected=landline]", tt.number, tt.expectedCountry)
 			} else {
 				if countryWithLandline.Alpha2 != tt.expectedCountry {
-					t.Errorf("country for number is invalid [number=%s, actual=%s, expected=%s]", tt.number, countryWithLandline.Alpha2, tt.expectedCountry)
+					t.Errorf("country for number is invalid (number=%s): [actual=%s, expected=%s]", tt.number, countryWithLandline.Alpha2, tt.expectedCountry)
 				}
 			}
 		}
