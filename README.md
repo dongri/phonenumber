@@ -1,5 +1,5 @@
 # phonenumber
-
+[![Run Tests](https://github.com/dongri/phonenumber/actions/workflows/run-tests.yml/badge.svg)](https://github.com/dongri/phonenumber/actions?query=branch%3Amaster)
 ## Description
 
 golang port of node-phone
