@@ -88,10 +88,10 @@ var mobWithLLCountryTests = []struct {
 }{
 	// landline numbers
 	{"3726347343", "EE"},
-	// {"74997098833", "RU"}, // FIXME: todo issue "expected `Russian Federation`, actual `Kazakhstan`" after bad commit 8015761a369bdf18f62fdebad892d824c99f8f41
+	{"74997098833", "RU"},
 	{"37167881727", "LV"},
-	//{"16466909997", "US"}, // FIXME: https://github.com/dongri/phonenumber/issues/23
-	//{"14378869667", "CA"}, // FIXME: https://github.com/dongri/phonenumber/issues/23
+	{"16466909997", "US"},
+	{"14378869667", "CA"},
 	// Mobile numbers
 	{"39339638066", "IT"},
 	{"37125641580", "LV"},
@@ -239,7 +239,7 @@ var mobCountryTests = []struct {
 	expectedIsMobile bool
 }{
 	{"3726347343", "EE", false},
-	// {"74997098833", "RU", false}, // FIXME: todo issue "expected `Russian Federation`, actual `Kazakhstan`" after bad commit 8015761a369bdf18f62fdebad892d824c99f8f41
+	{"74997098833", "RU", false},
 	{"37167881727", "LV", false},
 	{"39339638066", "IT", true},
 	{"3933431022608", "IT", true},

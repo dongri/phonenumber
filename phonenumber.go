@@ -103,7 +103,8 @@ func GetISO3166ByNumber(number string, withLandLine bool) ISO3166 {
 
 				// Match by country code only for landline numbers only
 				if withLandLine == true {
-					return i
+					iso3166 = i
+					break
 				}
 			}
 		}
