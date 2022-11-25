@@ -5,7 +5,7 @@
 
 golang port of node-phone
 
-phonenumber is used to normalize the mobile phone or land line number into a E.164 format.
+phonenumber is used to normalize the mobile phone or landline number into a E.164 format.
 
 The common problem is user normally input the phone number in this way:
 
@@ -34,7 +34,7 @@ go get github.com/dongri/phonenumber
 ## Usage
 
 ### Clearing format
-In this case land line numbers will be an invalid result:
+In this case landline numbers will be an invalid result:
 ```go
 import "github.com/dongri/phonenumber"
 
@@ -43,7 +43,7 @@ fmt.Println(number)
 // Output: 819061354467
 ```
 
-In this case you can format numbers included land line numbers:
+In this case you can format numbers included landline numbers:
 ```go
 import "github.com/dongri/phonenumber"
 
@@ -56,8 +56,8 @@ fmt.Println(number)
 ```go
 import "github.com/dongri/phonenumber"
 
-// Get country with mobile and land line numbers
-// Let's try to get country for Latvian land line number
+// Get country with mobile and landline numbers
+// Let's try to get country for Latvian landline number
 includeLandLine := true
 country := phonenumber.GetISO3166ByNumber("37165552336", includeLandLine)
 fmt.Println(country.CountryName)
