@@ -31,7 +31,7 @@ var mobFormatTestsNegative = []struct {
 	input   string
 	country string
 }{
-	// Land line numbers
+	// landline numbers
 	{"+371 (67) 881-727", "LV"},
 	{"3726347343", "EE"},
 	{"7499 709 88 33", "RU"},
@@ -43,23 +43,26 @@ func TestFormatForLandLineIsEmpty(t *testing.T) {
 	for _, tt := range mobFormatTestsNegative {
 		number := Parse(tt.input, tt.country)
 		if number != "" {
-			t.Errorf("Parse(number=`%s`, country=`%s`) for land line number miust be empty, actual `%s`", tt.input, tt.country, number)
+			t.Errorf("Parse(number=`%s`, country=`%s`) for landline number miust be empty, actual `%s`", tt.input, tt.country, number)
 		}
 	}
 }
 
-// Land line numbers format
+// landline numbers format
 var mobWithLLFormatTests = []struct {
 	input    string
 	country  string
 	expected string
 }{
-	// Land line numbers
+	// Landline numbers
 	{"+371 (67) 881-727", "LV", "37167881727"},
 	{"00371 (67) 881-727", "LV", "37167881727"},
-	// {"3726347343", "EE", "3726347343"}, // FIXME: expected `372634734312`, actual `372372634734312`
+	{"003726823000", "EE", "3726823000"},
+	{"+3726823000", "EE", "3726823000"},
+	{"3726823000", "EE", "3726823000"},
 	{"7499 709 88 33", "RU", "74997098833"},
 	{"22 (483) 53-34", "PL", "48224835334"},
+	{"48224835334", "PL", "48224835334"},
 	// Mobile numbers
 	{"090 6135 3368", "JP", "819061353368"},
 	{"+8615948692360", "CN", "8615948692360"},
@@ -83,12 +86,14 @@ var mobWithLLCountryTests = []struct {
 	input    string
 	expected string
 }{
-	// Land line numbers
+	// landline numbers
 	{"3726347343", "EE"},
-	// {"74997098833", "RU"}, // FIXME: todo issue "expected `Russian Federation`, actual `Kazakhstan`" after bad commit 8015761a369bdf18f62fdebad892d824c99f8f41
+	{"74997098833", "RU"},
 	{"37167881727", "LV"},
-	//{"16466909997", "US"}, // FIXME: https://github.com/dongri/phonenumber/issues/23
-	//{"14378869667", "CA"}, // FIXME: https://github.com/dongri/phonenumber/issues/23
+	{"16466909997", "US"},
+	{"14378869667", "CA"},
+	{"12836907618", "US"},
+	{"13406407159", "VI"},
 	// Mobile numbers
 	{"39339638066", "IT"},
 	{"37125641580", "LV"},
@@ -118,7 +123,7 @@ func TestGetCountryForMobileNumberWithLandLine(t *testing.T) {
 var indiaMobileTests = []struct {
 	input string
 }{
-	// Land line numbers
+	// landline numbers
 	{"916361673045"},
 	{"916354492726"},
 	{"910024980635"},
@@ -236,7 +241,7 @@ var mobCountryTests = []struct {
 	expectedIsMobile bool
 }{
 	{"3726347343", "EE", false},
-	// {"74997098833", "RU", false}, // FIXME: todo issue "expected `Russian Federation`, actual `Kazakhstan`" after bad commit 8015761a369bdf18f62fdebad892d824c99f8f41
+	{"74997098833", "RU", false},
 	{"37167881727", "LV", false},
 	{"39339638066", "IT", true},
 	{"3933431022608", "IT", true},
