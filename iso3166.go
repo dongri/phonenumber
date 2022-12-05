@@ -10,15 +10,15 @@ type ISO3166 struct {
 	PhoneNumberLengths []int
 }
 
-var iso3166List []ISO3166
+var iso3166Datas []ISO3166
 
 // GetISO3166 ...
 func GetISO3166() []ISO3166 {
-	if iso3166List != nil {
-		return iso3166List
+	if iso3166Datas != nil {
+		return iso3166Datas
 	}
 
-	iso3166Datas := []ISO3166{}
+	iso3166Datas = []ISO3166{}
 	var i = ISO3166{}
 
 	i.Alpha2 = "US"
@@ -1864,7 +1864,5 @@ func GetISO3166() []ISO3166 {
 	i.PhoneNumberLengths = []int{9}
 	iso3166Datas = append(iso3166Datas, i)
 
-	iso3166List = iso3166Datas
-
-	return iso3166List
+	return iso3166Datas
 }
