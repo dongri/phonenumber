@@ -3,6 +3,14 @@ package phonenumber
 import (
 	"regexp"
 	"strings"
+	"sync"
+)
+
+var (
+	digitsOnlyRegexp         = regexp.MustCompile(`\D`)
+	leadZeroRegexp           = regexp.MustCompile(`^0+`)
+	rusLocalePrefixRegexp    = regexp.MustCompile(`^8+`)
+	rusLocaleMobPrefixRegexp = regexp.MustCompile(`^89`)
 )
 
 // Parse mobile number by country
@@ -24,18 +32,16 @@ func parseInternal(number string, country string, landLineInclude bool) string {
 	}
 
 	// remove any non-digit character, included the +
-	number = regexp.MustCompile(`\D`).ReplaceAllString(number, "")
+	number = digitsOnlyRegexp.ReplaceAllString(number, "")
 
 	iso3166 := getISO3166ByCountry(country)
 
 	if indexOfString(iso3166.Alpha3, []string{"GAB", "CIV", "COG"}) == -1 {
-		r := regexp.MustCompile(`^0+`)
-		number = r.ReplaceAllString(number, "")
+		number = leadZeroRegexp.ReplaceAllString(number, "")
 	}
-	r := regexp.MustCompile(`^89`)
-	if iso3166.Alpha3 == "RUS" && len(number) == 11 && r.MatchString(number) == true {
-		r := regexp.MustCompile(`^8+`)
-		number = r.ReplaceAllString(number, "")
+
+	if iso3166.Alpha3 == "RUS" && len(number) == 11 && rusLocaleMobPrefixRegexp.MatchString(number) == true {
+		number = rusLocalePrefixRegexp.ReplaceAllString(number, "")
 	}
 	if plusSign {
 		iso3166 = GetISO3166ByNumber(number, landLineInclude)
@@ -89,13 +95,13 @@ func getISO3166ByCountry(country string) ISO3166 {
 func GetISO3166ByNumber(number string, withLandLine bool) ISO3166 {
 	iso3166 := ISO3166{}
 	for _, i := range GetISO3166() {
-		r := regexp.MustCompile(`^` + i.CountryCode)
+		r := getRegexpByCountryCode(i.CountryCode)
 		for _, l := range i.PhoneNumberLengths {
 			if r.MatchString(number) && len(number) == len(i.CountryCode)+l {
 				// Check match with mobile codes
 				for _, w := range i.MobileBeginWith {
-					r := regexp.MustCompile(`^` + i.CountryCode + w)
-					if r.MatchString(number) {
+					rm := getRegexpByCountryCode(i.CountryCode + w)
+					if rm.MatchString(number) {
 						// Match by mobile codes
 						return i
 					}
@@ -118,7 +124,7 @@ func validatePhoneISO3166(number string, iso3166 ISO3166, withLandLine bool) boo
 	}
 
 	if withLandLine {
-		r := regexp.MustCompile(`^` + iso3166.CountryCode)
+		r := getRegexpByCountryCode(iso3166.CountryCode)
 		for _, l := range iso3166.PhoneNumberLengths {
 			if r.MatchString(number) && len(number) == len(iso3166.CountryCode)+l {
 				return true
@@ -127,13 +133,13 @@ func validatePhoneISO3166(number string, iso3166 ISO3166, withLandLine bool) boo
 		return false
 	}
 
-	r := regexp.MustCompile(`^` + iso3166.CountryCode)
+	r := getRegexpByCountryCode(iso3166.CountryCode)
 	number = r.ReplaceAllString(number, "")
 	for _, l := range iso3166.PhoneNumberLengths {
 		if l == len(number) {
 			for _, w := range iso3166.MobileBeginWith {
-				r := regexp.MustCompile(`^` + w)
-				if r.MatchString(number) == true {
+				rm := getRegexpByCountryCode(w)
+				if rm.MatchString(number) == true {
 					return true
 				}
 			}
@@ -158,4 +164,19 @@ func indexOfInt(word int, data []int) int {
 		}
 	}
 	return -1
+}
+
+var rMap = map[string]*regexp.Regexp{}
+var rLock = sync.RWMutex{}
+
+func getRegexpByCountryCode(countryCode string) *regexp.Regexp {
+	rLock.Lock()
+	defer rLock.Unlock()
+	regex, exists := rMap[countryCode]
+	if exists {
+		return regex
+	} else {
+		rMap[countryCode] = regexp.MustCompile(`^` + countryCode)
+	}
+	return rMap[countryCode]
 }
