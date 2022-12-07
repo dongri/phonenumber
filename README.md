@@ -1,5 +1,5 @@
 # phonenumber
-![Coverage](https://img.shields.io/badge/Coverage-99.3%25-brightgreen)
+![Coverage](https://img.shields.io/badge/Coverage-99.4%25-brightgreen)
 [![Run Tests](https://github.com/dongri/phonenumber/actions/workflows/run-tests.yml/badge.svg)](https://github.com/dongri/phonenumber/actions?query=branch%3Amaster)
 ## Description
 
