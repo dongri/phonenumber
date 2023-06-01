@@ -21,6 +21,7 @@ var mobFormatTests = []struct {
 	{"+62 895349866066", "ID", "62895349866066"},
 	{"+51 912 640 074", "PE", "51912640074"},
 	{"+86 18 855 512 329", "CN", "8618855512329"},
+	{"+383 4 555 4999", "XK", "38345554999"},
 }
 
 func TestFormatMobile(t *testing.T) {
@@ -46,6 +47,7 @@ var mobFormatTestsNegative = []struct {
 	{"51926474", "PE"},
 	{"519264112", "PE"},
 	{"86178555123", "CN"},
+	{"383 9 3334999", "XK"},
 }
 
 func TestFormatForLandLineIsEmpty(t *testing.T) {
@@ -74,6 +76,7 @@ var mobWithLLFormatTests = []struct {
 	{"48224835334", "PL", "48224835334"},
 	{"+51 (1) 706-19-70", "PE", "5117061970"},
 	{"+86 21 85-512-329", "CN", "862185512329"},
+	{"+383 9 1234999", "XK", "38391234999"},
 
 	// Mobile numbers
 	{"090 6135 3368", "JP", "819061353368"},
@@ -84,6 +87,7 @@ var mobWithLLFormatTests = []struct {
 	{"00371 25 641 580", "LV", "37125641580"},
 	{"+51 999 400 500", "PE", "51999400500"},
 	{"+86 (16) 855-512-329", "CN", "8616855512329"},
+	{"+383 4 1234999", "XK", "38341234999"},
 }
 
 func TestFormatWithLandLine(t *testing.T) {
@@ -110,6 +114,7 @@ var mobWithLLCountryTests = []struct {
 	{"13406407159", "VI"},
 	{"5117061970", "PE"},
 	{"862185551232", "CN"},
+	{"38391234999", "XK"},
 
 	// Mobile numbers
 	{"39339638066", "IT"},
@@ -119,6 +124,7 @@ var mobWithLLCountryTests = []struct {
 	{"3197010280754", "NL"},
 	{"51999400500", "PE"},
 	{"8614855512329", "CN"},
+	{"38342224999", "XK"},
 }
 
 func TestGetCountryForMobileNumberWithLandLine(t *testing.T) {
@@ -282,6 +288,7 @@ var mobCountryTests = []struct {
 	{"59168295570", "BO", true},
 	{"51907061970", "PE", true},
 	{"8613855512329", "CN", true},
+	{"38361234999", "XK", true},
 }
 
 func TestGetCountryForMobileNumber(t *testing.T) {
