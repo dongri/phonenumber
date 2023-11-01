@@ -1620,6 +1620,14 @@ func populateISO3166() {
 	i.PhoneNumberLengths = []int{7}
 	iso3166Datas = append(iso3166Datas, i)
 
+	i.Alpha2 = "SZ"
+	i.Alpha3 = "SWZ"
+	i.CountryCode = "268"
+	i.CountryName = "Swaziland"
+	i.MobileBeginWith = []string{"7"}
+	i.PhoneNumberLengths = []int{8}
+	iso3166Datas = append(iso3166Datas, i)
+
 	i.Alpha2 = "SY"
 	i.Alpha3 = "SYR"
 	i.CountryCode = "963"
