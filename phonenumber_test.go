@@ -32,6 +32,7 @@ var mobWithLLCountryTests = []struct {
 	{"8614855512329", "CN"},
 	{"38342224999", "XK"},
 	{"26876123456", "SZ"},
+	{"18251234567", "CA"},
 }
 
 func TestGetCountryForMobileNumberWithLandLine(t *testing.T) {
