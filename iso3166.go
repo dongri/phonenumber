@@ -1230,7 +1230,7 @@ func populateISO3166() {
 	i.Alpha3 = "NAM"
 	i.CountryCode = "264"
 	i.CountryName = "Namibia"
-	i.MobileBeginWith = []string{"60", "81", "82", "85"}
+	i.MobileBeginWith = []string{"60", "81", "82", "83", "84", "85"}
 	i.PhoneNumberLengths = []int{9}
 	iso3166Datas = append(iso3166Datas, i)
 
