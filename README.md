@@ -3,7 +3,7 @@
 [![Run Tests](https://github.com/dongri/phonenumber/actions/workflows/run-tests.yml/badge.svg)](https://github.com/dongri/phonenumber/actions?query=branch%3Amaster)
 ## Description
 
-golang port of node-phone
+golang port of AfterShip/phone
 
 phonenumber is used to normalize the mobile phone or landline number into a E.164 format.
 
