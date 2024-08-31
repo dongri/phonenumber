@@ -23,6 +23,50 @@ func ParseWithLandLine(number string, country string) string {
 	return parseInternal(number, country, true)
 }
 
+// GetISO3166ByNumber ...
+func GetISO3166ByNumber(number string, withLandLine bool) ISO3166 {
+	iso3166 := ISO3166{}
+	for _, i := range GetISO3166() {
+		r := getRegexpByCountryCode(i.CountryCode)
+		for _, l := range i.PhoneNumberLengths {
+			if r.MatchString(number) && len(number) == len(i.CountryCode)+l {
+				// Check match with mobile codes
+				for _, w := range i.MobileBeginWith {
+					rm := getRegexpByCountryCode(i.CountryCode + w)
+					if rm.MatchString(number) {
+						// Match by mobile codes
+						return i
+					}
+				}
+
+				// Match by country code only for landline numbers only
+				if withLandLine {
+					iso3166 = i
+					break
+				}
+			}
+		}
+	}
+	return iso3166
+}
+
+// GetISO3166ByMobileNumber ...
+func GetISO3166ByMobileNumber(number string) []ISO3166 {
+	result := []ISO3166{}
+	for _, i := range GetISO3166() {
+		for _, l := range i.PhoneNumberLengths {
+			if len(number) == l {
+				for _, w := range i.MobileBeginWith {
+					if w != "" && strings.HasPrefix(number, w) {
+						result = append(result, i)
+					}
+				}
+			}
+		}
+	}
+	return result
+}
+
 func parseInternal(number string, country string, landLineInclude bool) string {
 	number = strings.Replace(number, " ", "", -1)
 	country = strings.Replace(country, " ", "", -1)
@@ -40,7 +84,7 @@ func parseInternal(number string, country string, landLineInclude bool) string {
 		number = leadZeroRegexp.ReplaceAllString(number, "")
 	}
 
-	if iso3166.Alpha3 == "RUS" && len(number) == 11 && rusLocaleMobPrefixRegexp.MatchString(number) == true {
+	if iso3166.Alpha3 == "RUS" && len(number) == 11 && rusLocaleMobPrefixRegexp.MatchString(number) {
 		number = rusLocalePrefixRegexp.ReplaceAllString(number, "")
 	}
 	if plusSign {
@@ -62,7 +106,6 @@ func getISO3166ByCountry(country string) ISO3166 {
 	switch len(country) {
 	case 0:
 		iso3166 = GetISO3166()[0]
-		break
 	case 2:
 		for _, i := range GetISO3166() {
 			if i.Alpha2 == uppperCaseCountry {
@@ -70,7 +113,6 @@ func getISO3166ByCountry(country string) ISO3166 {
 				break
 			}
 		}
-		break
 	case 3:
 		for _, i := range GetISO3166() {
 			if i.Alpha3 == uppperCaseCountry {
@@ -78,40 +120,11 @@ func getISO3166ByCountry(country string) ISO3166 {
 				break
 			}
 		}
-		break
 	default:
 		for _, i := range GetISO3166() {
 			if strings.ToUpper(i.CountryName) == uppperCaseCountry {
 				iso3166 = i
 				break
-			}
-		}
-		break
-	}
-	return iso3166
-}
-
-// GetISO3166ByNumber ...
-func GetISO3166ByNumber(number string, withLandLine bool) ISO3166 {
-	iso3166 := ISO3166{}
-	for _, i := range GetISO3166() {
-		r := getRegexpByCountryCode(i.CountryCode)
-		for _, l := range i.PhoneNumberLengths {
-			if r.MatchString(number) && len(number) == len(i.CountryCode)+l {
-				// Check match with mobile codes
-				for _, w := range i.MobileBeginWith {
-					rm := getRegexpByCountryCode(i.CountryCode + w)
-					if rm.MatchString(number) {
-						// Match by mobile codes
-						return i
-					}
-				}
-
-				// Match by country code only for landline numbers only
-				if withLandLine == true {
-					iso3166 = i
-					break
-				}
 			}
 		}
 	}
@@ -139,7 +152,7 @@ func validatePhoneISO3166(number string, iso3166 ISO3166, withLandLine bool) boo
 		if l == len(number) {
 			for _, w := range iso3166.MobileBeginWith {
 				rm := getRegexpByCountryCode(w)
-				if rm.MatchString(number) == true {
+				if rm.MatchString(number) {
 					return true
 				}
 			}
