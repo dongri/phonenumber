@@ -15,4 +15,7 @@ func main() {
 
 	countries = phonenumber.GetISO3166ByMobileNumber("14855512329")
 	fmt.Println(countries[0].CountryName)
+
+	parsed := phonenumber.ParseWithLandLine("+1 289 2999", "US")
+	fmt.Println(parsed)
 }

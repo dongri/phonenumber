@@ -70,9 +70,11 @@ func GetISO3166ByMobileNumber(number string) []ISO3166 {
 func parseInternal(number string, country string, landLineInclude bool) string {
 	number = strings.Replace(number, " ", "", -1)
 	country = strings.Replace(country, " ", "", -1)
-	plusSign := false
+
 	if strings.HasPrefix(number, "+") {
-		plusSign = true
+		if country == "" {
+			return ""
+		}
 	}
 
 	// remove any non-digit character, included the +
@@ -87,12 +89,8 @@ func parseInternal(number string, country string, landLineInclude bool) string {
 	if iso3166.Alpha3 == "RUS" && len(number) == 11 && rusLocaleMobPrefixRegexp.MatchString(number) {
 		number = rusLocalePrefixRegexp.ReplaceAllString(number, "")
 	}
-	if plusSign {
-		iso3166 = GetISO3166ByNumber(number, landLineInclude)
-	} else {
-		if indexOfInt(len(number), iso3166.PhoneNumberLengths) != -1 {
-			number = iso3166.CountryCode + number
-		}
+	if indexOfInt(len(number), iso3166.PhoneNumberLengths) != -1 {
+		number = iso3166.CountryCode + number
 	}
 	if validatePhoneISO3166(number, iso3166, landLineInclude) {
 		return number

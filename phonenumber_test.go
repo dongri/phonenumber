@@ -143,6 +143,7 @@ var mobWithLLFormatTests = []struct {
 	{"+51 999 400 500", "PE", "51999400500"},
 	{"+86 (16) 855-512-329", "CN", "8616855512329"},
 	{"+383 4 1234999", "XK", "38341234999"},
+	{"+1 289 2999", "USA", ""},
 }
 
 func TestFormatWithLandLine(t *testing.T) {
