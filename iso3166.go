@@ -638,8 +638,8 @@ func populateISO3166() {
 	i.Alpha3 = "GBR"
 	i.CountryCode = "44"
 	i.CountryName = "United Kingdom"
-	i.MobileBeginWith = []string{"7"}
-	i.PhoneNumberLengths = []int{10}
+	i.MobileBeginWith = []string{"7", "07"}
+	i.PhoneNumberLengths = []int{10, 11}
 	iso3166Datas = append(iso3166Datas, i)
 
 	i.Alpha2 = "GE"
@@ -886,8 +886,8 @@ func populateISO3166() {
 	i.Alpha3 = "JPN"
 	i.CountryCode = "81"
 	i.CountryName = "Japan"
-	i.MobileBeginWith = []string{"70", "80", "90"}
-	i.PhoneNumberLengths = []int{10}
+	i.MobileBeginWith = []string{"70", "80", "90", "070", "080", "090"}
+	i.PhoneNumberLengths = []int{10, 11}
 	iso3166Datas = append(iso3166Datas, i)
 
 	i.Alpha2 = "KZ"

@@ -109,7 +109,7 @@ func TestFormatForLandLineIsEmpty(t *testing.T) {
 	for _, tt := range mobFormatTestsNegative {
 		number := Parse(tt.input, tt.country)
 		if number != "" {
-			t.Errorf("Parse(number=`%s`, country=`%s`) for landline number miust be empty, actual `%s`", tt.input, tt.country, number)
+			t.Errorf("Parse(number=`%s`, country=`%s`) for landline number must be empty, actual `%s`", tt.input, tt.country, number)
 		}
 	}
 }
@@ -336,5 +336,32 @@ func TestGetCountryForMobileNumber(t *testing.T) {
 			}
 		}
 
+	}
+}
+
+// Get country by mobile number only
+var mobileNumbers = []struct {
+	input    string
+	expected string
+}{
+	// Mobile numbers
+	{"39339638066", "IT"},
+	{"07933846223", "GB"},
+	{"14855512329", "CN"},
+}
+
+func TestGetISO3166ByMobileNumber(t *testing.T) {
+	for _, tt := range mobileNumbers {
+		tt := tt
+		t.Run(tt.input, func(t *testing.T) {
+			t.Parallel()
+			countries := GetISO3166ByMobileNumber(tt.input)
+			expected := getISO3166ByCountry(tt.expected)
+			for _, country := range countries {
+				if country.CountryName != expected.CountryName {
+					t.Errorf("GetISO3166ByMobileNumber(number=`%s`): expected `%s`, actual `%s`", tt.input, expected.CountryName, country.CountryName)
+				}
+			}
+		})
 	}
 }
