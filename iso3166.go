@@ -671,7 +671,7 @@ func populateISO3166() {
 	i.CountryCode = "224"
 	i.CountryName = "Guinea"
 	i.MobileBeginWith = []string{"6"}
-	i.PhoneNumberLengths = []int{8}
+	i.PhoneNumberLengths = []int{8, 9}
 	iso3166Datas = append(iso3166Datas, i)
 
 	i.Alpha2 = "GP"
