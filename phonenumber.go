@@ -82,6 +82,15 @@ func parseInternal(number string, country string, landLineInclude bool) string {
 
 	iso3166 := getISO3166ByCountry(country)
 
+	// if number starts with country code and includes leading zero, remove the leading zero
+	if strings.HasPrefix(number, iso3166.CountryCode) {
+		withoutCountryCode := strings.Replace(number, iso3166.CountryCode, "", 1)
+		if strings.HasPrefix(withoutCountryCode, "0") {
+			withoutCountryCode = strings.Replace(withoutCountryCode, "0", "", 1)
+		}
+		number = iso3166.CountryCode + withoutCountryCode
+	}
+
 	if indexOfString(iso3166.Alpha3, []string{"GAB", "CIV", "COG"}) == -1 {
 		number = leadZeroRegexp.ReplaceAllString(number, "")
 	}
