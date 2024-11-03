@@ -18,4 +18,17 @@ func main() {
 
 	parsed := phonenumber.ParseWithLandLine("+1 289 2999", "US")
 	fmt.Println(parsed)
+
+	pn1 := "+44 07700900000"
+	fmt.Println(phonenumber.Parse(pn1, "GB"))
+
+	pn2 := "07700900000"
+	fmt.Println(phonenumber.Parse(pn2, "GB"))
+
+	pn3 := "447700900000"
+	fmt.Println(phonenumber.Parse(pn3, "GB"))
+
+	pn4 := "+8109012345678"
+	fmt.Println(phonenumber.Parse(pn4, "JP"))
+
 }
