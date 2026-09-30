@@ -98,8 +98,15 @@ func parseInternal(number string, country string, landLineInclude bool) string {
 	if iso3166.Alpha3 == "RUS" && len(number) == 11 && rusLocaleMobPrefixRegexp.MatchString(number) {
 		number = rusLocalePrefixRegexp.ReplaceAllString(number, "")
 	}
-	if indexOfInt(len(number), iso3166.PhoneNumberLengths) != -1 {
-		number = iso3166.CountryCode + number
+	if n := len(number); indexOfInt(n, iso3166.PhoneNumberLengths) != -1 {
+		cc := iso3166.CountryCode
+		// A number that already starts with the country code, and whose
+		// remaining length is itself a national length, is already international.
+		// Italy lists 9, 10, and 11, so 39 plus a 9-digit mobile is 11 digits
+		// and would otherwise gain a second 39.
+		if cc == "" || !strings.HasPrefix(number, cc) || indexOfInt(n-len(cc), iso3166.PhoneNumberLengths) == -1 {
+			number = cc + number
+		}
 	}
 	if validatePhoneISO3166(number, iso3166, landLineInclude) {
 		return number
