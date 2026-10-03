@@ -105,6 +105,20 @@ func TestParseDoesNotRepeatCountryCode(t *testing.T) {
 			t.Errorf("Parse(number=`%s`, country=`IT`): expected `%s`, actual `%s`", tt.input, tt.expected, got)
 		}
 	}
+
+	landlines := []struct {
+		input    string
+		country  string
+		expected string
+	}{
+		{"046 123456", "SE", "4646123456"},
+		{"04352 12345", "AT", "43435212345"},
+	}
+	for _, tt := range landlines {
+		if got := ParseWithLandLine(tt.input, tt.country); got != tt.expected {
+			t.Errorf("ParseWithLandLine(number=`%s`, country=`%s`): expected `%s`, actual `%s`", tt.input, tt.country, tt.expected, got)
+		}
+	}
 }
 
 // Negative tests for mobile format (landline numbers is not valid)

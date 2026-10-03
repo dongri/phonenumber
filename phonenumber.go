@@ -81,6 +81,8 @@ func parseInternal(number string, country string, landLineInclude bool) string {
 	number = digitsOnlyRegexp.ReplaceAllString(number, "")
 
 	iso3166 := getISO3166ByCountry(country)
+	// A single leading 0 is a national trunk prefix. 00 is an international prefix.
+	national := strings.HasPrefix(number, "0") && !strings.HasPrefix(number, "00")
 
 	// if number starts with country code and includes leading zero, remove the leading zero
 	if strings.HasPrefix(number, iso3166.CountryCode) {
@@ -100,11 +102,8 @@ func parseInternal(number string, country string, landLineInclude bool) string {
 	}
 	if n := len(number); indexOfInt(n, iso3166.PhoneNumberLengths) != -1 {
 		cc := iso3166.CountryCode
-		// A number that already starts with the country code, and whose
-		// remaining length is itself a national length, is already international.
-		// Italy lists 9, 10, and 11, so 39 plus a 9-digit mobile is 11 digits
-		// and would otherwise gain a second 39.
-		if cc == "" || !strings.HasPrefix(number, cc) || indexOfInt(n-len(cc), iso3166.PhoneNumberLengths) == -1 {
+		// Already international, unless a trunk prefix says this is national.
+		if cc == "" || national || !strings.HasPrefix(number, cc) || indexOfInt(n-len(cc), iso3166.PhoneNumberLengths) == -1 {
 			number = cc + number
 		}
 	}
