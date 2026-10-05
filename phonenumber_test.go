@@ -88,6 +88,39 @@ func TestFormatMobile(t *testing.T) {
 	}
 }
 
+func TestParseDoesNotRepeatCountryCode(t *testing.T) {
+	// 39339638066 is 39 plus the 9-digit mobile 339638066.
+	// 11 is also an Italian national length, so the old length check
+	// treated the whole number as national and prepended 39 again.
+	cases := []struct {
+		input    string
+		expected string
+	}{
+		{"39339638066", "39339638066"},
+		{"+39 339 638 066", "39339638066"},
+		{"339638066", "39339638066"},
+	}
+	for _, tt := range cases {
+		if got := Parse(tt.input, "IT"); got != tt.expected {
+			t.Errorf("Parse(number=`%s`, country=`IT`): expected `%s`, actual `%s`", tt.input, tt.expected, got)
+		}
+	}
+
+	landlines := []struct {
+		input    string
+		country  string
+		expected string
+	}{
+		{"046 123456", "SE", "4646123456"},
+		{"04352 12345", "AT", "43435212345"},
+	}
+	for _, tt := range landlines {
+		if got := ParseWithLandLine(tt.input, tt.country); got != tt.expected {
+			t.Errorf("ParseWithLandLine(number=`%s`, country=`%s`): expected `%s`, actual `%s`", tt.input, tt.country, tt.expected, got)
+		}
+	}
+}
+
 // Negative tests for mobile format (landline numbers is not valid)
 var mobFormatTestsNegative = []struct {
 	input   string

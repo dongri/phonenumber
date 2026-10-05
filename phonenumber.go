@@ -81,6 +81,8 @@ func parseInternal(number string, country string, landLineInclude bool) string {
 	number = digitsOnlyRegexp.ReplaceAllString(number, "")
 
 	iso3166 := getISO3166ByCountry(country)
+	// A single leading 0 is a national trunk prefix. 00 is an international prefix.
+	national := strings.HasPrefix(number, "0") && !strings.HasPrefix(number, "00")
 
 	// if number starts with country code and includes leading zero, remove the leading zero
 	if strings.HasPrefix(number, iso3166.CountryCode) {
@@ -98,8 +100,12 @@ func parseInternal(number string, country string, landLineInclude bool) string {
 	if iso3166.Alpha3 == "RUS" && len(number) == 11 && rusLocaleMobPrefixRegexp.MatchString(number) {
 		number = rusLocalePrefixRegexp.ReplaceAllString(number, "")
 	}
-	if indexOfInt(len(number), iso3166.PhoneNumberLengths) != -1 {
-		number = iso3166.CountryCode + number
+	if n := len(number); indexOfInt(n, iso3166.PhoneNumberLengths) != -1 {
+		cc := iso3166.CountryCode
+		// Already international, unless a trunk prefix says this is national.
+		if cc == "" || national || !strings.HasPrefix(number, cc) || indexOfInt(n-len(cc), iso3166.PhoneNumberLengths) == -1 {
+			number = cc + number
+		}
 	}
 	if validatePhoneISO3166(number, iso3166, landLineInclude) {
 		return number
